@@ -40,11 +40,15 @@ Generate SVG progress bars by accessing the endpoints with specific query parame
 - Parameters: width, height, percentage
 - Example: http://localhost:8080/bar?width=300&height=50&percentage=75
 
+<img src="https://progress.2ajoyce.com/bar?width=300&height=50&percentage=75">
+
 **Circular Progress Bar**
 
 - Endpoint: /circle
 - Parameters: size, percentage
 - Example: http://localhost:8080/circle?size=120&percentage=75
+
+<img src="https://progress.2ajoyce.com/circle?size=120&percentage=75">
 
 ## Customization
 
