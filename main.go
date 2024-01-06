@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"html/template"
-	"log"
 	"net/http"
 	"strconv"
 	"strings"
@@ -12,7 +11,6 @@ import (
 )
 
 func seq(start, end int) []int {
-	log.Printf("seq function called with start: %d, end: %d", start, end) // Add this log
 	sequence := make([]int, end-start+1)
 	for i := range sequence {
 		sequence[i] = start + i
