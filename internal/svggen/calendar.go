@@ -46,7 +46,7 @@ func hasElem(slice []int, elem int) bool {
 const calendarChartTemplateStr = `
 		<svg width="370px" height="310px" xmlns="http://www.w3.org/2000/svg" font-family="Arial">
 			<!-- Background with rounded corners and padding -->
-			<rect x="5" y="5" width="360px" height="300px" fill="white" rx="15" /> <!-- Adjust as needed -->
+			<rect x="5" y="5" width="360px" height="300px" fill="white" rx="15" />
 
 			<!-- Header for month and year -->
 			<text x="180" y="35" font-size="20" text-anchor="middle" fill="black">{{.MonthName}} {{.Year}}</text>
