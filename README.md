@@ -39,17 +39,17 @@ Generate SVG progress bars by accessing the endpoints with specific query parame
 
 - **Endpoint**: `/progress/bar`
 - **Parameters**: `width`, `height`, `percentage`
-- **Example**: `http://localhost:8080/progress/bar?width=300&height=50&percentage=75`
+- **Example**: `http://localhost:8080/progress/bar?width=300&height=50&percentage=72`
 
-![Linear Progress Bar](https://progress.2ajoyce.com/progress/bar?width=300&height=50&percentage=75)
+![Linear Progress Bar](https://progress.2ajoyce.com/progress/bar?width=300&height=50&percentage=72)
 
 ### Circular Progress Bar
 
 - **Endpoint**: `/progress/circle`
 - **Parameters**: `size`, `percentage`
-- **Example**: `http://localhost:8080/progress/circle?size=120&percentage=75`
+- **Example**: `http://localhost:8080/progress/circle?size=120&percentage=72`
 
-![Circular Progress Bar](https://progress.2ajoyce.com/progress/circle?size=120&percentage=75)
+![Circular Progress Bar](https://progress.2ajoyce.com/progress/circle?size=120&percentage=72)
 
 ### Calendar Progress Chart
 
