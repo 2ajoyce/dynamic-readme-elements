@@ -12,7 +12,7 @@ import (
 // TestHandleProgressCircle tests the HandleProgressCircle function.
 func TestHandleProgressCircle(t *testing.T) {
 	router := gin.Default()
-	router.GET("/circle", HandleProgressCircle)
+	router.GET("/progress/circle", HandleProgressCircle)
 
 	testCases := []struct {
 		name           string
@@ -22,13 +22,13 @@ func TestHandleProgressCircle(t *testing.T) {
 	}{
 		{
 			name:           "Normal case",
-			queryString:    "/circle?size=103&percentage=58",
+			queryString:    "/progress/circle?size=103&percentage=58",
 			expectedStatus: http.StatusOK,
 			expectedInBody: []string{"<svg height=\"103px\" width=\"103px\"", "stroke-dasharray=\"132.9476, 96.2724\"", "58%"},
 		},
 		{
 			name:           "Normal case - Full Template",
-			queryString:    "/circle?size=103&percentage=58",
+			queryString:    "/progress/circle?size=103&percentage=58",
 			expectedStatus: http.StatusOK,
 			expectedInBody: []string{
 				`<svg height="103px" width="103px" viewBox="0 0 103 103" xmlns="http://www.w3.org/2000/svg">`,
@@ -40,13 +40,13 @@ func TestHandleProgressCircle(t *testing.T) {
 		},
 		{
 			name:           "Percentage below zero",
-			queryString:    "/circle?size=103&percentage=-10",
+			queryString:    "/progress/circle?size=103&percentage=-10",
 			expectedStatus: http.StatusOK,
 			expectedInBody: []string{"stroke-dasharray=\"0, 229.22\"", "0%"},
 		},
 		{
 			name:           "Percentage above 100",
-			queryString:    "/circle?size=103&percentage=150",
+			queryString:    "/progress/circle?size=103&percentage=150",
 			expectedStatus: http.StatusOK,
 			expectedInBody: []string{"stroke-dasharray=\"229.22, 0\"", "100%"},
 		},

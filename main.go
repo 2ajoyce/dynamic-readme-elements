@@ -12,10 +12,10 @@ func main() {
 	router.GET("/calendar", svggen2.HandleCalendar)
 
 	// Route for a rectangular loading bar
-	router.GET("/bar", svggen2.HandleProgressBar)
+	router.GET("/progress/bar", svggen2.HandleProgressBar)
 
 	// Route for a circular progress bar
-	router.GET("/circle", svggen2.HandleProgressCircle)
+	router.GET("/progress/circle", svggen2.HandleProgressCircle)
 
 	err := router.Run(":8080")
 	if err != nil {

@@ -12,7 +12,7 @@ import (
 // TestHandleProgressBar tests the HandleProgressBar function.
 func TestHandleProgressBar(t *testing.T) {
 	router := gin.Default()
-	router.GET("/bar", HandleProgressBar)
+	router.GET("/progress/bar", HandleProgressBar)
 
 	testCases := []struct {
 		name           string
@@ -22,13 +22,13 @@ func TestHandleProgressBar(t *testing.T) {
 	}{
 		{
 			name:           "Normal case",
-			queryString:    "/bar?width=221&height=33&percentage=54",
+			queryString:    "/progress/bar?width=221&height=33&percentage=54",
 			expectedStatus: http.StatusOK,
 			expectedInBody: []string{"width=\"221px\"", "height=\"33px\"", "fill=\"#4c1\"", "54%"},
 		},
 		{
 			name:           "Normal case - Full Template",
-			queryString:    "/bar?width=221&height=33&percentage=54",
+			queryString:    "/progress/bar?width=221&height=33&percentage=54",
 			expectedStatus: http.StatusOK,
 			expectedInBody: []string{
 				`<svg width="221px" height="33px" xmlns="http://www.w3.org/2000/svg">`,
@@ -40,13 +40,13 @@ func TestHandleProgressBar(t *testing.T) {
 		},
 		{
 			name:           "Percentage below zero",
-			queryString:    "/bar?width=200&height=30&percentage=-10",
+			queryString:    "/progress/bar?width=200&height=30&percentage=-10",
 			expectedStatus: http.StatusOK,
 			expectedInBody: []string{"width=\"200px\"", "height=\"30px\"", "fill=\"#555\"", "0%"},
 		},
 		{
 			name:           "Percentage above 100",
-			queryString:    "/bar?width=200&height=30&percentage=150",
+			queryString:    "/progress/bar?width=200&height=30&percentage=150",
 			expectedStatus: http.StatusOK,
 			expectedInBody: []string{"width=\"200px\"", "height=\"30px\"", "fill=\"#4c1\"", "100%"},
 		},
