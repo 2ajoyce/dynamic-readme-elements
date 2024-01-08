@@ -1,5 +1,4 @@
-FROM golang:1.21-alpine
-
+FROM golang:1.21-alpine AS builder
 WORKDIR /usr/src/app
 
 # pre-copy/cache go.mod for pre-downloading dependencies and only redownloading them in subsequent builds if they change
@@ -7,6 +6,8 @@ COPY go.mod go.sum ./
 RUN go mod download && go mod verify
 
 COPY . .
-RUN go build -v -o /usr/local/bin/app/ ./...
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o /usr/local/bin/app
 
-CMD ["app"]
+FROM alpine:latest
+COPY --from=builder /usr/local/bin/app /app
+ENTRYPOINT ["/app"]
