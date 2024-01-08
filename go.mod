@@ -1,4 +1,4 @@
-module dynamic-readme-elements/m/v2
+module github.com/2ajoyce/dynamic-readme-elements
 
 go 1.20
 

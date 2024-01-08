@@ -1,7 +1,7 @@
 package main
 
 import (
-	"dynamic-readme-elements/m/v2/svggen"
+	svggen2 "github.com/2ajoyce/dynamic-readme-elements/internal/svggen"
 	"github.com/gin-gonic/gin"
 )
 
@@ -9,13 +9,13 @@ func main() {
 	router := gin.Default()
 
 	// Route for a calendar
-	router.GET("/calendar", svggen.HandleCalendar)
+	router.GET("/calendar", svggen2.HandleCalendar)
 
 	// Route for a rectangular loading bar
-	router.GET("/bar", svggen.HandleProgressBar)
+	router.GET("/bar", svggen2.HandleProgressBar)
 
 	// Route for a circular progress bar
-	router.GET("/circle", svggen.HandleProgressCircle)
+	router.GET("/circle", svggen2.HandleProgressCircle)
 
 	err := router.Run(":8080")
 	if err != nil {
