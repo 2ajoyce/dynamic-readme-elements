@@ -9,9 +9,9 @@ import (
 const circleTemplateStr = `
 
 	<svg height="{{.Size}}px" width="{{.Size}}px" viewBox="0 0 {{.Size}} {{.Size}}" xmlns="http://www.w3.org/2000/svg">
-		<circle cx="{{.Center}}" cy="{{.Center}}" r="{{.Radius}}" stroke="lightgrey" stroke-width="{{.StrokeWidth}}" fill="white" />
-		<circle cx="{{.Center}}" cy="{{.Center}}" r="{{.Radius}}" stroke="#4c1" stroke-width="{{.StrokeWidth}}" fill="none" stroke-dasharray="{{.StrokeDasharrayFilled}}, {{.StrokeDasharrayUnfilled}}" stroke-dashoffset="0" transform="rotate(-90, {{.Center}}, {{.Center}})" />
-		<text x="{{.Center}}" y="{{.Center}}" font-size="{{.FontSize}}px" dominant-baseline="central" text-anchor="middle" fill="black" font-family="Arial, Helvetica, sans-serif" font-weight="bold">{{.Percentage}}%</text>
+		<circle cx="{{.Center}}" cy="{{.Center}}" r="{{.Radius}}" stroke="{{.ColorInactive}}" stroke-width="{{.StrokeWidth}}" fill="{{.ColorWhite}}" />
+		<circle cx="{{.Center}}" cy="{{.Center}}" r="{{.Radius}}" stroke="{{.ColorActive}}" stroke-width="{{.StrokeWidth}}" fill="none" stroke-dasharray="{{.StrokeDasharrayFilled}}, {{.StrokeDasharrayUnfilled}}" stroke-dashoffset="0" transform="rotate(-90, {{.Center}}, {{.Center}})" />
+		<text x="{{.Center}}" y="{{.Center}}" font-size="{{.FontSize}}px" dominant-baseline="central" text-anchor="middle" fill="{{.ColorBlack}}" font-family="Arial, Helvetica, sans-serif" font-weight="bold">{{.Percentage}}%</text>
 	</svg>
 	`
 
@@ -34,9 +34,14 @@ func HandleProgressCircle(c *gin.Context) {
 	strokeDasharrayUnfilled := circumference - strokeDasharrayFilled
 
 	data := struct {
+		ColorActive, ColorInactive, ColorWhite, ColorBlack                       string
 		Size, StrokeWidth, Percentage                                            int
 		Radius, StrokeDasharrayFilled, StrokeDasharrayUnfilled, FontSize, Center float64
 	}{
+		ColorActive:             Colors.ProgressActive,
+		ColorInactive:           Colors.ProgressInactive,
+		ColorWhite:              Colors.White,
+		ColorBlack:              Colors.Black,
 		Size:                    size,
 		StrokeWidth:             strokeWidth,
 		Percentage:              percentage,

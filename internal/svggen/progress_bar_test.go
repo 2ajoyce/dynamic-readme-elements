@@ -1,6 +1,7 @@
 package svggen
 
 import (
+	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"strings"
@@ -24,7 +25,7 @@ func TestHandleProgressBar(t *testing.T) {
 			name:           "Normal case",
 			queryString:    "/progress/bar?width=221&height=33&percentage=54",
 			expectedStatus: http.StatusOK,
-			expectedInBody: []string{"width=\"221px\"", "height=\"33px\"", "fill=\"#4c1\"", "54%"},
+			expectedInBody: []string{"width=\"221px\"", "height=\"33px\"", fmt.Sprintf("fill=\"%s\"", Colors.ProgressActive), "54%"},
 		},
 		{
 			name:           "Normal case - Full Template",
@@ -32,9 +33,9 @@ func TestHandleProgressBar(t *testing.T) {
 			expectedStatus: http.StatusOK,
 			expectedInBody: []string{
 				`<svg width="221px" height="33px" xmlns="http://www.w3.org/2000/svg">`,
-				`<rect rx="3" ry="3" x="0" y="0" width="221px" height="33px" fill="#555" />`,
-				`<rect rx="3" ry="3" x="0" y="0" width="119px" height="33px" fill="#4c1" />`,
-				`<text x="110px" y="16px" font-size="16px" dominant-baseline="central" text-anchor="middle" fill="#fff" font-family="Arial, Helvetica, sans-serif" font-weight="bold">54%</text>`,
+				fmt.Sprintf("<rect rx=\"3\" ry=\"3\" x=\"0\" y=\"0\" width=\"221px\" height=\"33px\" fill=\"%s\" />", Colors.ProgressInactive),
+				fmt.Sprintf("<rect rx=\"3\" ry=\"3\" x=\"0\" y=\"0\" width=\"119px\" height=\"33px\" fill=\"%s\" />", Colors.ProgressActive),
+				fmt.Sprintf("<text x=\"110px\" y=\"16px\" font-size=\"16px\" dominant-baseline=\"central\" text-anchor=\"middle\" fill=\"%s\" font-family=\"Arial, Helvetica, sans-serif\" font-weight=\"bold\">54%%</text>", Colors.White),
 				`</svg>`,
 			},
 		},
@@ -42,13 +43,13 @@ func TestHandleProgressBar(t *testing.T) {
 			name:           "Percentage below zero",
 			queryString:    "/progress/bar?width=200&height=30&percentage=-10",
 			expectedStatus: http.StatusOK,
-			expectedInBody: []string{"width=\"200px\"", "height=\"30px\"", "fill=\"#555\"", "0%"},
+			expectedInBody: []string{"width=\"200px\"", "height=\"30px\"", fmt.Sprintf("fill=\"%s\"", Colors.ProgressInactive), "0%"},
 		},
 		{
 			name:           "Percentage above 100",
 			queryString:    "/progress/bar?width=200&height=30&percentage=150",
 			expectedStatus: http.StatusOK,
-			expectedInBody: []string{"width=\"200px\"", "height=\"30px\"", "fill=\"#4c1\"", "100%"},
+			expectedInBody: []string{"width=\"200px\"", "height=\"30px\"", fmt.Sprintf("fill=\"%s\"", Colors.ProgressActive), "100%"},
 		},
 	}
 

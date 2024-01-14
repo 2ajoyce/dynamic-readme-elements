@@ -4,10 +4,10 @@ This project provides a Go API using the Gin framework for generating customizab
 
 ## Features
 
-- **Linear Progress Bar**: Generates a horizontal bar indicating progress.
-- **Circular Progress Bar**: Creates a circular, "donut" style progress indicator.
-- **Calendar Progress Chart**: Displays a monthly calendar with marked progress days.
-- **Customizable**: Adjust size, percentage, and other properties via query parameters.
+- **Linear Progress Bar**: Generates a horizontal bar to visually represent progress. Customizable in size and fill percentage.
+- **Circular Progress Bar**: Creates a circular or "donut" style progress indicator. Size and progress fill are adjustable.
+- **Waffle Progress Chart**: Displays progress in a grid or 'waffle' format. Offers customization in grid size, square count, and filled percentage.
+- **Calendar Progress Chart**: Shows a monthly calendar view with specific days marked to indicate progress. Customizable by year, month, and progress days.
 
 ## Getting Started
 
@@ -39,17 +39,25 @@ Generate SVG progress bars by accessing the endpoints with specific query parame
 
 - **Endpoint**: `/progress/bar`
 - **Parameters**: `width`, `height`, `percentage`
-- **Example**: `http://localhost:8080/progress/bar?width=300&height=50&percentage=72`
+- **Example**: `http://localhost:8080/progress/bar?width=100&height=25&percentage=72`
 
-![Linear Progress Bar](https://progress.2ajoyce.com/progress/bar?width=300&height=50&percentage=72)
+![Linear Progress Bar](https://progress.2ajoyce.com/progress/bar?width=100&height=25&percentage=72)
 
 ### Circular Progress Bar
 
 - **Endpoint**: `/progress/circle`
 - **Parameters**: `size`, `percentage`
-- **Example**: `http://localhost:8080/progress/circle?size=120&percentage=72`
+- **Example**: `http://localhost:8080/progress/circle?size=100&percentage=72`
 
-![Circular Progress Bar](https://progress.2ajoyce.com/progress/circle?size=120&percentage=72)
+![Circular Progress Bar](https://progress.2ajoyce.com/progress/circle?size=100&percentage=72)
+
+### Waffle Progress Chart
+
+- **Endpoint**: `/progress/waffle`
+- **Parameters**: `width`, `numberOfSquares`,`percentage`
+- **Example**: `http://localhost:8080/progress/waffle?width=100&numberOfSquares=100&percentage=99`
+
+![Waffle Progress Chart](https://progress.2ajoyce.com/progress/waffle?width=100&numberOfSquares=100&percentage=99)
 
 ### Calendar Progress Chart
 
@@ -62,12 +70,12 @@ Generate SVG progress bars by accessing the endpoints with specific query parame
 
 ## Customization
 
-Modify query parameters for customization:
+Each progress indicator type offers specific customization options through query parameters:
 
-- width and height for the linear bar (in pixels).
-- size for the diameter of the circular bar (in pixels).
-- percentage for progress representation (0 to 100).
-- For the calendar chart, year, month, and progressDays to mark specific days.
+- **Linear Progress Bar**: Adjust the `width`, `height`, and `percentage` to control the bar's dimensions and progress.
+- **Circular Progress Bar**: Modify the `size` for the diameter and `percentage` for progress representation.
+- **Waffle Progress Chart**: Change the `width` to control the overall size, `numberOfSquares` for grid density, and `percentage` for filled squares.
+- **Calendar Progress Chart**: Set `year`, `month`, and optionally `progressDays` to display progress on specific days of a month.
 
 ## Acknowledgments
 
