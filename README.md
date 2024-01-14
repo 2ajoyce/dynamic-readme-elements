@@ -55,9 +55,9 @@ Generate SVG progress bars by accessing the endpoints with specific query parame
 
 - **Endpoint**: `/progress/waffle`
 - **Parameters**: `width`, `numberOfSquares`,`percentage`
-- **Example**: `http://localhost:8080/progress/waffle?width=100&numberOfSquares=100&percentage=99`
+- **Example**: `http://localhost:8080/progress/waffle?width=100&numberOfSquares=114&percentage=72`
 
-![Waffle Progress Chart](https://progress.2ajoyce.com/progress/waffle?width=100&numberOfSquares=100&percentage=99)
+![Waffle Progress Chart](https://progress.2ajoyce.com/progress/waffle?width=100&numberOfSquares=114&percentage=72)
 
 ### Calendar Progress Chart
 
