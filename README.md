@@ -54,7 +54,7 @@ This project provides a Go API using the Gin framework for generating customizab
 
 Generate SVG progress bars by accessing the endpoints with specific query parameters:
 
-### Gauge Progress Chart
+### Progress Gauge
 - **Endpoint**: `/progress/gauge`
 - **Parameters**: `width, percentage`
 - **Example**: `http://localhost:8080/progress/gauge?width=100&percentage=72`
