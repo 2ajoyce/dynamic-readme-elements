@@ -1,0 +1,382 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Demo</title>
+    <meta name="description" content="A demo page for validating content rendering">
+    <style>
+        body {
+            transition: background-color 0.5s ease;
+            font-family: Arial, sans-serif;
+            margin: 0 auto;
+            padding: 0;
+            color: #333;
+            max-width: 1300px;
+        }
+
+        header {
+            display: flex;
+            flex-direction: column;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            text-align: center;
+
+            h1 {
+                margin-bottom: 10px;
+            }
+
+            p {
+                color: #666;
+            }
+        }
+
+        article {
+            display: flex;
+            flex-direction: column;
+            margin: 2em 2em 4em;
+
+            h2 a {
+                color: #007bff; /* Change to your preferred color */
+                text-decoration: none; /* Removes underline from links */
+                font-weight: bold; /* Optional: makes the text bold */
+            }
+
+            h2 a:hover, h2 a:focus {
+                color: #0056b3; /* Darker shade for hover/focus */
+                text-decoration: underline; /* Adds underline on hover/focus */
+                cursor: pointer; /* Changes cursor to pointer to indicate clickable link */
+            }
+
+
+
+            .svg-element {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+
+        .wide-array {
+            display: flex;
+            flex-wrap: wrap;
+            width: 100%;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+        .narrow-array {
+            display: flex;
+            flex-wrap: wrap;
+            width: 100%;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .toggle-button {
+            background-color: #444;
+            color: #F6F6F6;
+            border: none;
+            border-radius: 20px;
+            padding: 10px 20px;
+            cursor: pointer;
+            outline: none;
+            display: flex;
+            align-items: center;
+        }
+
+        .icon {
+            margin-right: 8px;
+            font-size: 20px;
+        }
+        .badge {
+            margin-left:2em;
+            padding: 10px 20px;
+            outline: none;
+            display: flex;
+            align-items: center;
+            label {
+                margin-right: .2em;
+            }
+        }
+
+        .text {
+            font-size: 18px;
+        }
+
+        .preformatted {
+            color: #f92657
+        }
+
+        #darkIcon, #darkText {
+            display: none;
+        }
+
+        #serverInput{
+            color: #555;
+            background-color: white;
+            border:2px solid #555;
+            padding: .2em;
+        }
+        #serverDownIcon, #serverUpIcon {
+            display: none;
+        }
+
+        .server-down {
+            #serverDownIcon {
+                display: inline;
+            }
+
+            #serverUpIcon {
+                display: none;
+            }
+        }
+        .server-up {
+            #serverDownIcon {
+                display: none;
+            }
+
+            #serverUpIcon {
+                display: inline;
+            }
+        }
+
+        .dark-mode {
+            background-color: #222;
+            color: #F6F6F6;
+
+            header {
+                background-color: #666;
+
+                p {
+                    color: #D6D6D6;
+                }
+            }
+
+            .preformatted {
+                color: #FC88A3
+            }
+
+            .toggle-button {
+                background-color: #D6D6D6;
+                color: #555;
+                outline: 2px solid #222;
+            }
+
+            #darkIcon, #darkText {
+                display: inline;
+            }
+
+            #lightIcon, #lightText {
+                display: none;
+            }
+            #serverInput{
+                color: #555;
+                background-color: #D6D6D6;
+            }
+        }
+    </style>
+    <script>
+        let server = 'localhost:8080' // Default server
+
+        // Set server value once page loads
+        document.addEventListener("DOMContentLoaded", function(){
+            document.getElementById('serverInput').value = server
+        });
+
+        // Called by server Input onChange event
+        // Update the server value
+        // Check server up/down
+        // Refresh page content
+        const updateServer = (newServer) => {
+            server = newServer
+            checkServer()
+            updateSvgs(newServer)
+        }
+
+        // Check browser compatability if changing this function
+        // I tried a few things to force refresh Objects.
+        // Cloning them and removing the existing object seemed the most reliable
+        const updateSvgs = (newServer) => {
+            Array.from(document.getElementsByClassName('svg-element')).forEach((svgElement) => {
+                svgElement.style.display = 'none'; // workaround for Chrome
+                let object_element = svgElement.querySelector('object')
+                let url = new URL(object_element.getAttribute('data'));
+                url.host = newServer
+                object_element.setAttribute('data', url.href);
+                let newObj = object_element.cloneNode(true)
+                svgElement.appendChild(newObj)
+                object_element.remove()
+                svgElement.style.display = '';
+            })
+        }
+
+        // Because CORs issues are expected, mode: 'no-cors' is used
+        // This prevents us from accessing the response code
+        // If the server is completely unavailable the error will be thrown
+        // Responses will count as success regardless of code.
+        // 200 and 404 will count as the server being up
+        // Do not call this function with loop=true in multiple locations
+        // or parallel loops will be started
+        const checkServer = (loop = false) => {
+            fetch(`http://${server}/health`, {mode: 'no-cors'}).then(r => {
+                    document.body.classList.toggle("server-up", true)
+                    document.body.classList.toggle("server-down", false)
+            }).catch(e => {
+                document.body.classList.toggle("server-up", false)
+                document.body.classList.toggle("server-down", true)
+            });
+            if(loop) {
+                setTimeout(checkServer, 60*1000) // Check every 60 seconds
+            }
+        }
+
+        // This starts the checkServer loop to refresh the icons
+        // Do not call this function anywhere else with loop=true
+        // or multiple parallel loops will be started
+        checkServer(loop=true)
+    </script>
+</head>
+<body>
+<header>
+    <div>
+        <h1>Dynamic Readme Elements</h1>
+        <p class="text">Use the <code class="text preformatted">/demo</code> route to visualize components while
+            developing locally</p>
+    </div>
+    <div class="narrow-array">
+        <button id="toggleButton" class="toggle-button" onclick="ToggleDarkMode()">
+            <span id="darkIcon" class="icon">&#128161;</span>
+            <span id="lightIcon" class="icon">&#127769;</span>
+            <span id="lightText" class="text">Dark Mode</span>
+            <span id="darkText" class="text">Light Mode</span>
+        </button>
+        <span class="badge">
+            <label for="serverInput" class="text">Server</label>
+            <input id="serverInput" type="text" placeholder="localhost:8080" class="text" onchange="updateServer(this.value)"/>
+            <span id="serverUpIcon" class="icon">&#9989;</span>
+            <span id="serverDownIcon" class="icon">&#10060;</span>
+        </span>
+    </div>
+</header>
+<article>
+    <h2><a href="http://localhost:8080/progress/gauge" target="_blank">Progress Gauge</a></h2>
+    <div class="wide-array">
+        <div class="svg-element">
+            <object data="http://localhost:8080/progress/gauge?width=200&percentage=100" type="image/svg+xml"></object>
+            <p class="text">100% Completion</p>
+        </div>
+        <div class="svg-element">
+            <object data="http://localhost:8080/progress/gauge?width=150&percentage=50" type="image/svg+xml"></object>
+            <p class="text">50% Completion</p>
+        </div>
+        <div class="svg-element">
+            <object data="http://localhost:8080/progress/gauge?width=125&percentage=25" type="image/svg+xml"></object>
+            <p class="text">25% Completion</p>
+        </div>
+        <div class="svg-element">
+            <object data="http://localhost:8080/progress/gauge?width=100&percentage=0" type="image/svg+xml"></object>
+            <p class="text">0% Completion</p>
+        </div>
+    </div>
+</article>
+
+<article>
+    <h2><a href="http://localhost:8080/progress/bar?width=100&height=25&percentage=72" target="_blank">Linear Progress
+        Bar</a></h2>
+    <div class="wide-array">
+        <div class="svg-element">
+            <object data="http://localhost:8080/progress/bar?width=200&height=25&percentage=100"
+                    type="image/svg+xml"></object>
+            <p class="text">100% Completion</p>
+        </div>
+        <div class="svg-element">
+            <object data="http://localhost:8080/progress/bar?width=150&height=25&percentage=72"
+                    type="image/svg+xml"></object>
+            <p class="text">72% Completion</p>
+        </div>
+        <div class="svg-element">
+            <object data="http://localhost:8080/progress/bar?width=125&height=25&percentage=50"
+                    type="image/svg+xml"></object>
+            <p class="text">50% Completion</p>
+        </div>
+        <div class="svg-element">
+            <object data="http://localhost:8080/progress/bar?width=100&height=25&percentage=20"
+                    type="image/svg+xml"></object>
+            <p class="text">20% Completion</p>
+        </div>
+    </div>
+</article>
+
+<article>
+    <h2><a href="http://localhost:8080/progress/circle?size=100&percentage=72" target="_blank">Circular Progress Bar</a>
+    </h2>
+    <div class="wide-array">
+        <div class="svg-element">
+            <object data="http://localhost:8080/progress/circle?size=200&percentage=100" type="image/svg+xml"></object>
+            <p class="text">100% Completion</p>
+        </div>
+        <div class="svg-element">
+            <object data="http://localhost:8080/progress/circle?size=150&percentage=72" type="image/svg+xml"></object>
+            <p class="text">72% Completion</p>
+        </div>
+        <div class="svg-element">
+            <object data="http://localhost:8080/progress/circle?size=125&percentage=50" type="image/svg+xml"></object>
+            <p class="text">50% Completion</p>
+        </div>
+        <div class="svg-element">
+            <object data="http://localhost:8080/progress/circle?size=100&percentage=25" type="image/svg+xml"></object>
+            <p class="text">25% Completion</p>
+        </div>
+    </div>
+</article>
+
+<article>
+    <h2><a href="http://localhost:8080/progress/waffle?width=100&numberOfSquares=114&percentage=72" target="_blank">Waffle
+        Progress Chart</a></h2>
+    <div class="wide-array">
+        <div class="svg-element">
+            <object data="http://localhost:8080/progress/waffle?width=200&numberOfSquares=114&percentage=150"
+                    type="image/svg+xml"></object>
+            <p class="text">100% Completion</p>
+        </div>
+        <div class="svg-element">
+            <object data="http://localhost:8080/progress/waffle?width=150&numberOfSquares=114&percentage=72"
+                    type="image/svg+xml"></object>
+            <p class="text">72% Completion</p>
+        </div>
+        <div class="svg-element">
+            <object data="http://localhost:8080/progress/waffle?width=125&numberOfSquares=114&percentage=50"
+                    type="image/svg+xml"></object>
+            <p class="text">50% Completion</p>
+        </div>
+        <div class="svg-element">
+            <object data="http://localhost:8080/progress/waffle?width=100&numberOfSquares=114&percentage=25"
+                    type="image/svg+xml"></object>
+            <p class="text">25% Completion</p>
+        </div>
+    </div>
+</article>
+
+<article>
+    <h2><a href="http://localhost:8080/calendar?year=2023&month=1&progressDays=2,15,20" target="_blank">Calendar
+        Progress Chart</a></h2>
+    <div class="wide-array">
+        <div class="svg-element">
+            <object data="http://localhost:8080/calendar?year=2023&month=4&progressDays=5,18,24"
+                    type="image/svg+xml"></object>
+            <p class="text">A month with 6 weeks</p>
+        </div>
+        <div class="svg-element">
+            <object data="http://localhost:8080/calendar" type="image/svg+xml"></object>
+            <p class="text">Current month and day</p>
+        </div>
+    </div>
+</article>
+
+</body>
+<script>
+    const ToggleDarkMode = (color) => {
+        document.body.classList.toggle("dark-mode")
+    }
+</script>
+</html>

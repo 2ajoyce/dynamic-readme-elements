@@ -10,39 +10,6 @@ import (
 	"time"
 )
 
-func seq(start, end int) []int {
-	sequence := make([]int, end-start+1)
-	for i := range sequence {
-		sequence[i] = start + i
-	}
-	return sequence
-}
-
-func mod(a, b int) int {
-	return a % b
-}
-
-func div(a, b int) int {
-	return a / b
-}
-
-func mult(a, b int) int {
-	return a * b
-}
-
-func add(a, b int) int {
-	return a + b
-}
-
-func hasElem(slice []int, elem int) bool {
-	for _, v := range slice {
-		if v == elem {
-			return true
-		}
-	}
-	return false
-}
-
 const calendarChartTemplateStr = `
 		<svg width="370px" height="310px" xmlns="http://www.w3.org/2000/svg" font-family="Arial">
 			<!-- Background with rounded corners and padding -->
@@ -72,7 +39,7 @@ func HandleCalendar(c *gin.Context) {
 		"seq":     seq,
 		"mod":     mod,
 		"div":     div,
-		"mult":    mult,
+		"mult":    multInt,
 		"add":     add,
 		"hasElem": hasElem,
 	}
@@ -140,8 +107,6 @@ func HandleCalendar(c *gin.Context) {
 
 	// Execute the template and write the response
 	c.Writer.Header().Set("Content-Type", "image/svg+xml")
-	fmt.Printf("Year: %d, Month: %d (%s), Days in Month: %d, Start Day: %d, Progress Days: %v\n",
-		data.Year, data.Month, data.MonthName, data.DaysInMonth, data.StartDay, data.ProgressDays)
 	err = calendarChartTemplate.Execute(c.Writer, data)
 	if err != nil {
 		c.String(http.StatusInternalServerError, fmt.Sprintf("Error rendering calendar: %v", err))

@@ -117,16 +117,16 @@ func TestGenerateSquares(t *testing.T) {
 				X, Y  int
 				Color string
 			}{
-				{3, 3, Colors.ProgressActive},
-				{23, 3, Colors.ProgressActive},
-				{43, 3, Colors.ProgressActive},
-				{63, 3, Colors.ProgressActive},
-				{83, 3, Colors.ProgressActive},
-				{3, 23, Colors.ProgressActive},
-				{23, 23, Colors.ProgressInactive},
-				{43, 23, Colors.ProgressInactive},
-				{63, 23, Colors.ProgressInactive},
-				{83, 23, Colors.ProgressInactive},
+				{3, 3, Colors.Green},
+				{23, 3, Colors.Green},
+				{43, 3, Colors.Green},
+				{63, 3, Colors.Green},
+				{83, 3, Colors.Green},
+				{3, 23, Colors.Green},
+				{23, 23, Colors.Grey},
+				{43, 23, Colors.Grey},
+				{63, 23, Colors.Grey},
+				{83, 23, Colors.Grey},
 			},
 		},
 		{
@@ -139,16 +139,16 @@ func TestGenerateSquares(t *testing.T) {
 				X, Y  int
 				Color string
 			}{
-				{3, 3, Colors.ProgressActive},
-				{23, 3, Colors.ProgressActive},
-				{43, 3, Colors.ProgressActive},
-				{63, 3, Colors.ProgressActive},
-				{83, 3, Colors.ProgressActive},
-				{3, 23, Colors.ProgressActive},
-				{23, 23, Colors.ProgressActive},
-				{43, 23, Colors.ProgressActive},
-				{63, 23, Colors.ProgressActive},
-				{83, 23, Colors.ProgressActive},
+				{3, 3, Colors.Green},
+				{23, 3, Colors.Green},
+				{43, 3, Colors.Green},
+				{63, 3, Colors.Green},
+				{83, 3, Colors.Green},
+				{3, 23, Colors.Green},
+				{23, 23, Colors.Green},
+				{43, 23, Colors.Green},
+				{63, 23, Colors.Green},
+				{83, 23, Colors.Green},
 			},
 		},
 		{
@@ -161,16 +161,16 @@ func TestGenerateSquares(t *testing.T) {
 				X, Y  int
 				Color string
 			}{
-				{3, 3, Colors.ProgressInactive},
-				{23, 3, Colors.ProgressInactive},
-				{43, 3, Colors.ProgressInactive},
-				{63, 3, Colors.ProgressInactive},
-				{83, 3, Colors.ProgressInactive},
-				{3, 23, Colors.ProgressInactive},
-				{23, 23, Colors.ProgressInactive},
-				{43, 23, Colors.ProgressInactive},
-				{63, 23, Colors.ProgressInactive},
-				{83, 23, Colors.ProgressInactive},
+				{3, 3, Colors.Grey},
+				{23, 3, Colors.Grey},
+				{43, 3, Colors.Grey},
+				{63, 3, Colors.Grey},
+				{83, 3, Colors.Grey},
+				{3, 23, Colors.Grey},
+				{23, 23, Colors.Grey},
+				{43, 23, Colors.Grey},
+				{63, 23, Colors.Grey},
+				{83, 23, Colors.Grey},
 			},
 		},
 	}
@@ -189,61 +189,6 @@ func TestGenerateSquares(t *testing.T) {
 				if squares[i].X != expectedSquare.X || squares[i].Y != expectedSquare.Y || squares[i].Color != expectedSquare.Color {
 					t.Errorf("Test %s failed at square %d: expected %v, got %v", tc.name, i, expectedSquare, squares[i])
 				}
-			}
-		})
-	}
-}
-
-func TestClamp(t *testing.T) {
-	testCases := []struct {
-		name     string
-		value    int
-		min      int
-		max      int
-		expected int
-	}{
-		{
-			name:     "Value within range",
-			value:    50,
-			min:      0,
-			max:      100,
-			expected: 50,
-		},
-		{
-			name:     "Value below minimum",
-			value:    -10,
-			min:      0,
-			max:      100,
-			expected: 0,
-		},
-		{
-			name:     "Value above maximum",
-			value:    150,
-			min:      0,
-			max:      100,
-			expected: 100,
-		},
-		{
-			name:     "Value equal to minimum",
-			value:    0,
-			min:      0,
-			max:      100,
-			expected: 0,
-		},
-		{
-			name:     "Value equal to maximum",
-			value:    100,
-			min:      0,
-			max:      100,
-			expected: 100,
-		},
-	}
-
-	for _, tc := range testCases {
-		t.Run(tc.name, func(t *testing.T) {
-			result := clamp(tc.value, tc.min, tc.max)
-			if result != tc.expected {
-				t.Errorf("Test %s failed: expected %d, got %d", tc.name, tc.expected, result)
 			}
 		})
 	}
@@ -328,8 +273,8 @@ func validateWaffleSVG(svgContent string, filledCount, unfilledCount int) error 
 	}
 
 	// Use regular expressions to match squares regardless of attribute order
-	filledRegex := regexp.MustCompile(fmt.Sprintf(`class="gridSquare"[^>]*fill="%s"`, Colors.ProgressActive))
-	unfilledRegex := regexp.MustCompile(fmt.Sprintf(`class="gridSquare"[^>]*fill="%s"`, Colors.ProgressInactive))
+	filledRegex := regexp.MustCompile(fmt.Sprintf(`class="gridSquare"[^>]*fill="%s"`, Colors.Green))
+	unfilledRegex := regexp.MustCompile(fmt.Sprintf(`class="gridSquare"[^>]*fill="%s"`, Colors.Grey))
 
 	// Count occurrences of filled and unfilled squares
 	actualFilled := len(filledRegex.FindAllStringIndex(svgContent, -1))

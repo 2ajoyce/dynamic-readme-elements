@@ -82,9 +82,9 @@ func GenerateSquares(width, squaresPerRow, numberOfSquares, filledSquares, gap i
 		x := gap + (i%squaresPerRow)*(squareWidth+gap+extraWidthPerSquare)
 		y := gap + (i/squaresPerRow)*(squareWidth+gap)
 
-		color := Colors.ProgressInactive // Default color for unfilled squares
+		color := Colors.Grey // Default color for unfilled squares
 		if i < filledSquares {
-			color = Colors.ProgressActive // Color for filled squares
+			color = Colors.Green // Color for filled squares
 		}
 
 		squares[i] = struct {
@@ -93,16 +93,6 @@ func GenerateSquares(width, squaresPerRow, numberOfSquares, filledSquares, gap i
 		}{X: x, Y: y, Color: color}
 	}
 	return squares
-}
-
-func clamp(value, min, max int) int {
-	if value < min {
-		return min
-	}
-	if value > max {
-		return max
-	}
-	return value
 }
 
 func HandleProgressWaffle(c *gin.Context) {
