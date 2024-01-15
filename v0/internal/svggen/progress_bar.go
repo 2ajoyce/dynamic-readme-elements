@@ -33,8 +33,8 @@ func HandleProgressBar(c *gin.Context) {
 		ColorActive, ColorInactive, ColorWhite                       string
 		Width, Height, FillWidth, TextX, TextY, FontSize, Percentage int
 	}{
-		ColorActive:   Colors.ProgressActive,
-		ColorInactive: Colors.ProgressInactive,
+		ColorActive:   Colors.Green,
+		ColorInactive: Colors.Grey,
 		ColorWhite:    Colors.White,
 		Width:         width,
 		Height:        height,

@@ -33,8 +33,8 @@ func TestHandleProgressCircle(t *testing.T) {
 			expectedStatus: http.StatusOK,
 			expectedInBody: []string{
 				`<svg height="103px" width="103px" viewBox="0 0 103 103" xmlns="http://www.w3.org/2000/svg">`,
-				fmt.Sprintf("<circle cx=\"51.5\" cy=\"51.5\" r=\"36.5\" stroke=\"%s\" stroke-width=\"15\" fill=\"%s\" />", Colors.ProgressInactive, Colors.White),
-				fmt.Sprintf("<circle cx=\"51.5\" cy=\"51.5\" r=\"36.5\" stroke=\"%s\" stroke-width=\"15\" fill=\"none\" stroke-dasharray=\"132.9476, 96.2724\" stroke-dashoffset=\"0\" transform=\"rotate(-90, 51.5, 51.5)\" />", Colors.ProgressActive),
+				fmt.Sprintf("<circle cx=\"51.5\" cy=\"51.5\" r=\"36.5\" stroke=\"%s\" stroke-width=\"15\" fill=\"%s\" />", Colors.Grey, Colors.White),
+				fmt.Sprintf("<circle cx=\"51.5\" cy=\"51.5\" r=\"36.5\" stroke=\"%s\" stroke-width=\"15\" fill=\"none\" stroke-dasharray=\"132.9476, 96.2724\" stroke-dashoffset=\"0\" transform=\"rotate(-90, 51.5, 51.5)\" />", Colors.Green),
 				fmt.Sprintf("text x=\"51.5\" y=\"51.5\" font-size=\"20.6px\" dominant-baseline=\"central\" text-anchor=\"middle\" fill=\"%s\" font-family=\"Arial, Helvetica, sans-serif\" font-weight=\"bold\">58%%</text>", Colors.Black),
 				`</svg>`,
 			},

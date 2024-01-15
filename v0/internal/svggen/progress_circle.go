@@ -38,8 +38,8 @@ func HandleProgressCircle(c *gin.Context) {
 		Size, StrokeWidth, Percentage                                            int
 		Radius, StrokeDasharrayFilled, StrokeDasharrayUnfilled, FontSize, Center float64
 	}{
-		ColorActive:             Colors.ProgressActive,
-		ColorInactive:           Colors.ProgressInactive,
+		ColorActive:             Colors.Green,
+		ColorInactive:           Colors.Grey,
 		ColorWhite:              Colors.White,
 		ColorBlack:              Colors.Black,
 		Size:                    size,

@@ -10,4 +10,5 @@ RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o /usr/local/bin/app
 
 FROM alpine:latest
 COPY --from=builder /usr/local/bin/app /app
+ENV GIN_MODE=release
 ENTRYPOINT ["/app"]
