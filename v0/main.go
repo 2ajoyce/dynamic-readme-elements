@@ -1,12 +1,10 @@
 package main
 
 import (
-	"fmt"
+	"github.com/2ajoyce/dynamic-readme-elements/v0/internal"
 	"github.com/2ajoyce/dynamic-readme-elements/v0/internal/svggen"
 	"github.com/gin-gonic/gin"
-	"log/slog"
 	"net/http"
-	"runtime/debug"
 )
 
 func main() {
@@ -33,11 +31,7 @@ func main() {
 	})
 
 	// Route for version endpoint
-	router.GET("/version", func(c *gin.Context) {
-		info, _ := debug.ReadBuildInfo()
-		slog.Debug(fmt.Sprintf("BuildInfo:\n%+v", info))
-		c.JSON(http.StatusOK, gin.H{"version": info.Main.Version})
-	})
+	router.GET("/version", internal.HandleVersion)
 
 	err := router.Run(":8080")
 	if err != nil {
