@@ -26,7 +26,7 @@ func TestHandleCalendar(t *testing.T) {
 			queryString:    "/calendar?year=2023&month=1&progressDays=1,15",
 			expectedStatus: http.StatusOK,
 			expectInBody: []string{
-				`<svg width="370px" height="310px" xmlns="http://www.w3.org/2000/svg" font-family="Arial">`,
+				`<svg width="370px" height="310px" xmlns="http://www.w3.org/2000/svg" font-family="Arial">`, // Height for 5wk month
 				`<rect x="5" y="5" width="360px" height="300px" fill="white" rx="15" />`,                    // Background
 				`<text x="180" y="35" font-size="20" text-anchor="middle" fill="black">January 2023</text>`, // Header
 				// Check for a few specific days, including one that is marked as progress and one that is not
@@ -34,6 +34,22 @@ func TestHandleCalendar(t *testing.T) {
 				`<text x="35" y="70" font-size="14" text-anchor="middle" fill="white">1</text>`, // Text for Day 1
 				`<rect x="65" y="45" width="40" height="40" fill="#f0f0f0" stroke="#ddd" />`,    // Day 2 without progress
 				`<text x="85" y="70" font-size="14" text-anchor="middle" fill="black">2</text>`, // Text for Day 2
+			},
+		},
+		{
+			name:           "Check height when month has 6 weeks",
+			queryString:    "/calendar?year=2023&month=4",
+			expectedStatus: http.StatusOK,
+			expectInBody: []string{
+				`<svg width="370px" height="360px" xmlns="http://www.w3.org/2000/svg" font-family="Arial">`,
+			},
+		},
+		{
+			name:           "Check height when month has ALMOST 6 weeks",
+			queryString:    "/calendar?year=2024&month=8",
+			expectedStatus: http.StatusOK,
+			expectInBody: []string{
+				`<svg width="370px" height="310px" xmlns="http://www.w3.org/2000/svg" font-family="Arial">`,
 			},
 		},
 		{
