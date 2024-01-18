@@ -11,7 +11,7 @@ import (
 const gaugeChartTemplateStr = `
 <svg height="{{.Center}}px" width="{{.Size}}px" viewBox="0 0 {{.Size}} {{.Center}}" xmlns="http://www.w3.org/2000/svg">
 	{{ range .PieSections }}
-		<path d="{{.Path}}" fill="{{.FillColor}}"/>
+		<path d="{{.Path}}" fill="{{.FillColor}}" opacity="{{.Opacity}}"/>
 	{{ end }}
     <path d="M{{.Center}},{{.Center}} L{{mult .Center 0.5}},{{.Center}} A{{mult .Center 0.5}},{{mult .Center 0.5}} 0 1,1 {{mult .Center 1.5}},{{.Center}} Z" fill="{{.ColorWhite}}"/>
     <polygon points="{{.Needle.X1}},{{.Needle.Y1}} {{.Needle.X2}},{{.Needle.Y2}} {{.Needle.X3}},{{.Needle.Y3}}" fill="{{.ColorBlack}}" />
@@ -29,6 +29,7 @@ type Needle struct {
 type PieSection struct {
 	FillColor string
 	Path      string // Path data with M, L, A, and Z commands
+	Opacity   string
 }
 
 func radians(degrees float64) float64 {
@@ -57,11 +58,30 @@ func HandleProgressGauge(c *gin.Context) {
 
 	// Create instances of PieSection for each section
 	pieSections := []PieSection{
-		{Colors.Red, createPiePath(center, center, 180, 180+angle)},
-		{Colors.Orange, createPiePath(center, center, 180+angle, 180+2*angle)},
-		{Colors.Yellow, createPiePath(center, center, 180+2*angle, 180+3*angle)},
-		{Colors.LightGreen, createPiePath(center, center, 180+3*angle, 180+4*angle)},
-		{Colors.Green, createPiePath(center, center, 180+4*angle, 180+5*angle)},
+		{Colors.Red, createPiePath(center, center, 180, 180+angle), ""},
+		{Colors.Orange, createPiePath(center, center, 180+angle, 180+2*angle), ""},
+		{Colors.Yellow, createPiePath(center, center, 180+2*angle, 180+3*angle), ""},
+		{Colors.LightGreen, createPiePath(center, center, 180+3*angle, 180+4*angle), ""},
+		{Colors.Green, createPiePath(center, center, 180+4*angle, 180+5*angle), ""},
+	}
+
+	// divide by the number of sections
+	interval := 100 / len(pieSections)
+
+	// Now check which interval the percentage belongs to
+	// activeIndex is a 1 based index, [1-5]
+	// check if percentage is 0
+	activeIndex := 0
+	if percentage > 0 {
+		activeIndex = int((percentage+interval-1)/interval) - 1
+	}
+	// set the opacity for each section
+	for i := range pieSections {
+		opacity := "0.5"
+		if i == activeIndex {
+			opacity = "1"
+		}
+		pieSections[i].Opacity = opacity
 	}
 
 	data := struct {
