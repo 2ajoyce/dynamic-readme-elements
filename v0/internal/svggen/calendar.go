@@ -13,7 +13,7 @@ import (
 const calendarChartTemplateStr = `
 	<svg width="370px" height="{{.Height}}px" xmlns="http://www.w3.org/2000/svg" font-family="Arial">
 		<!-- Background with rounded corners and padding -->
-		<rect x="5" y="5" width="360px" height="300px" fill="white" rx="15" />
+		<rect x="5" y="5" width="360px" height="{{add .Height -10}}px" fill="white" rx="15" />
 
 		<!-- Header for month and year -->
 		<text x="180" y="35" font-size="20" text-anchor="middle" fill="black">{{.MonthName}} {{.Year}}</text>
