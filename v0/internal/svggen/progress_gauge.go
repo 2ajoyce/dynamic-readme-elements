@@ -51,22 +51,15 @@ func HandleProgressGauge(c *gin.Context) {
 		width = 100
 	}
 	percentage = clamp(percentage, 0, 100)
+	effectiveWidth := int(float64(width) * 0.90) // Shrinking the effective width by 20% allows extension of the active section
 
 	// Calculate center and needle position based on percentage
 	center := float64(width) / 2
+	effectiveCenter := float64(effectiveWidth) / 2
 	needle := calculateNeedlePosition(center, percentage)
 
-	// Create instances of PieSection for each section
-	pieSections := []PieSection{
-		{Colors.Red, createPiePath(center, center, 180, 180+angle), ""},
-		{Colors.Orange, createPiePath(center, center, 180+angle, 180+2*angle), ""},
-		{Colors.Yellow, createPiePath(center, center, 180+2*angle, 180+3*angle), ""},
-		{Colors.LightGreen, createPiePath(center, center, 180+3*angle, 180+4*angle), ""},
-		{Colors.Green, createPiePath(center, center, 180+4*angle, 180+5*angle), ""},
-	}
-
 	// divide by the number of sections
-	interval := 100 / len(pieSections)
+	interval := 100 / 5
 
 	// Now check which interval the percentage belongs to
 	// activeIndex is a 1 based index, [1-5]
@@ -75,26 +68,28 @@ func HandleProgressGauge(c *gin.Context) {
 	if percentage > 0 {
 		activeIndex = int((percentage+interval-1)/interval) - 1
 	}
-	// set the opacity for each section
-	for i := range pieSections {
-		opacity := "0.5"
+
+	pieColors := []string{Colors.Red, Colors.Orange, Colors.Yellow, Colors.LightGreen, Colors.Green}
+	pieSections := make([]PieSection, 5) // create slice with 5 sections
+	for i := 0; i < len(pieSections); i++ {
 		if i == activeIndex {
-			opacity = "1"
+			pieSections[i] = PieSection{pieColors[i], createPiePath(center, effectiveCenter, 180+float64(i)*angle, 180+float64(i+1)*angle, true), "1"}
+		} else {
+			pieSections[i] = PieSection{pieColors[i], createPiePath(center, effectiveCenter, 180+float64(i)*angle, 180+float64(i+1)*angle, false), "0.5"}
 		}
-		pieSections[i].Opacity = opacity
 	}
 
 	data := struct {
 		ColorWhite, ColorBlack, ColorGrey string
-		Size, Percentage                  int
-		Center, NeedleX, NeedleY          float64
+		Percentage                        int
+		Size, Center, NeedleX, NeedleY    float64
 		Needle                            Needle
 		PieSections                       []PieSection
 	}{
 		ColorWhite:  Colors.White,
 		ColorBlack:  Colors.Black,
 		ColorGrey:   Colors.Grey,
-		Size:        width,
+		Size:        float64(width),
 		Percentage:  percentage,
 		Center:      center,
 		Needle:      needle,
@@ -107,14 +102,18 @@ func HandleProgressGauge(c *gin.Context) {
 	}
 }
 
-func createPiePath(center, radius, startAngle, endAngle float64) string {
-	startX := center + radius*math.Cos(radians(startAngle))
-	startY := center + radius*math.Sin(radians(startAngle))
-	endX := center + radius*math.Cos(radians(endAngle))
-	endY := center + radius*math.Sin(radians(endAngle))
+func createPiePath(center, radius, startAngle, endAngle float64, isActive bool) string {
+	innerRadius := radius
+	if isActive {
+		innerRadius = radius * 1.1 // increase radius by 50% if section is active
+	}
 
-	path := fmt.Sprintf("M %f,%f A %f,%f 0 0 1 %f,%f L %f,%f L %f,%f Z", startX, startY, radius, radius, endX, endY, center, center, startX, startY)
+	startX := center + innerRadius*math.Cos(radians(startAngle))
+	startY := center + innerRadius*math.Sin(radians(startAngle))
+	endX := center + innerRadius*math.Cos(radians(endAngle))
+	endY := center + innerRadius*math.Sin(radians(endAngle))
 
+	path := fmt.Sprintf("M %f,%f A %f,%f 0 0 1 %f,%f L %f,%f L %f,%f Z", startX, startY, innerRadius, innerRadius, endX, endY, center, center, startX, startY)
 	return path
 }
 
