@@ -5,7 +5,20 @@
 
 version: 2
 updates:
-  - package-ecosystem: "gomod" # See documentation for possible values
-    directory: "/v0" # Location of package manifests
+  # Enable version updates for Go modules
+  - package-ecosystem: "gomod"
+    directory: "/v0"
+    schedule:
+      interval: "weekly"
+  
+  # Enable version updates for Docker base images
+  - package-ecosystem: "docker"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+  
+  # Enable version updates for GitHub Actions
+  - package-ecosystem: "github-actions"
+    directory: "/"
     schedule:
       interval: "weekly"
