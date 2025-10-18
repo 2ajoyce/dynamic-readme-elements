@@ -29,13 +29,13 @@ This project provides a Go API using the Gin framework for generating customizab
    ```
 3. Run the server:
 
-   &nbsp;Using locally installed Go <img src="https://cdn.simpleicons.org/go/#00ADD8" alt="Go" align=left width=19 height=19>
+   &nbsp;Using locally installed Go
 
      ```bash
        go run main.go
      ```
 
-   &nbsp;Using Docker<img src="https://cdn.simpleicons.org/docker/#2496ED" alt="Go" align=left width=19 height=19>
+   &nbsp;Using Docker
 
      ```bash
      docker build -t dynamic-readme-elements .
@@ -108,4 +108,3 @@ Each progress indicator type offers specific customization options through query
 
 - Thanks to the Go and Gin communities for their resources and support.
 - Inspired by [Frederico Jordan's progress-bar repository](https://github.com/fredericojordan/progress-bar)
-- README icons from [SimpleIcons](https://simpleicons.org/)
