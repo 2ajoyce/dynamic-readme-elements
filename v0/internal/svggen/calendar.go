@@ -21,6 +21,14 @@ const calendarChartTemplateStr = `
 		progressDaysMap[{{$day}}] = true;
 		{{- end }}
 
+		// Calendar layout constants
+		var CELL_SIZE = 40;
+		var CELL_SPACING = 50;
+		var GRID_OFFSET_X = 15;
+		var GRID_OFFSET_Y = 45;
+		var TEXT_OFFSET_X = 20; // Centers text in 40px cell
+		var TEXT_OFFSET_Y = 25; // Centers text in 40px cell
+
 		function getDaysInMonth(year, month) {
 			return new Date(year, month, 0).getDate();
 		}
@@ -52,22 +60,22 @@ const calendarChartTemplateStr = `
 			// Generate new calendar grid
 			for (var i = 1; i <= daysInMonth; i++) {
 				var positionIndex = i + startDay - 1;
-				var x = (positionIndex % 7) * 50 + 15;
-				var y = Math.floor(positionIndex / 7) * 50 + 45;
+				var x = (positionIndex % 7) * CELL_SPACING + GRID_OFFSET_X;
+				var y = Math.floor(positionIndex / 7) * CELL_SPACING + GRID_OFFSET_Y;
 				var isProgress = progressDaysMap[i] === true;
 				
 				var rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
 				rect.setAttribute("x", x);
 				rect.setAttribute("y", y);
-				rect.setAttribute("width", 40);
-				rect.setAttribute("height", 40);
+				rect.setAttribute("width", CELL_SIZE);
+				rect.setAttribute("height", CELL_SIZE);
 				rect.setAttribute("fill", isProgress ? "#4c1" : "#f0f0f0");
 				rect.setAttribute("stroke", "#ddd");
 				calendarGrid.appendChild(rect);
 				
 				var text = document.createElementNS("http://www.w3.org/2000/svg", "text");
-				text.setAttribute("x", x + 20);
-				text.setAttribute("y", y + 25);
+				text.setAttribute("x", x + TEXT_OFFSET_X);
+				text.setAttribute("y", y + TEXT_OFFSET_Y);
 				text.setAttribute("font-size", 14);
 				text.setAttribute("text-anchor", "middle");
 				text.setAttribute("fill", isProgress ? "white" : "black");
@@ -80,7 +88,10 @@ const calendarChartTemplateStr = `
 			if (startDay + daysInMonth > 35) {
 				height = 360;
 			}
-			document.documentElement.setAttribute("height", height + "px");
+			var svgRoot = document.querySelector('svg');
+			if (svgRoot) {
+				svgRoot.setAttribute("height", height + "px");
+			}
 			document.getElementById("bgRect").setAttribute("height", (height - 10) + "px");
 		}
 
