@@ -21,7 +21,7 @@ func HandleVersion(c *gin.Context) {
 		var err error
 		tags, err = GetTagsForCommit(info.Main.Path, vcsRevision)
 		if err != nil {
-			slog.Error("Error Retrieving Version Tags", err)
+			slog.Error("Error Retrieving Version Tags", "error", err)
 		}
 	} else {
 		slog.Error("No Commit Hash Found")
