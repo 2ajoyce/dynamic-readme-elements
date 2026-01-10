@@ -101,9 +101,9 @@ func TestCreatePiePath(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		actual := createPiePath(test.center, test.radius, test.startAngle, test.endAngle)
+		actual := createPiePath(test.center, test.radius, test.startAngle, test.endAngle, false)
 		if actual != test.expected {
-			t.Errorf("createPiePath(%f, %f, %f, %f) = %s; want %s", test.center, test.radius, test.startAngle, test.endAngle, actual, test.expected)
+			t.Errorf("createPiePath(%f, %f, %f, %f, false) = %s; want %s", test.center, test.radius, test.startAngle, test.endAngle, actual, test.expected)
 		}
 	}
 }
