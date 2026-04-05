@@ -10,15 +10,21 @@ updates:
     directory: "/v0"
     schedule:
       interval: "weekly"
-  
+    cooldown:
+      minimum-age-days: 5
+
   # Enable version updates for Docker base images
   - package-ecosystem: "docker"
     directory: "/"
     schedule:
       interval: "weekly"
-  
+    cooldown:
+      minimum-age-days: 5
+
   # Enable version updates for GitHub Actions
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
       interval: "weekly"
+    cooldown:
+      minimum-age-days: 5
