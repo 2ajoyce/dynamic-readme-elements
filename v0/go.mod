@@ -1,6 +1,6 @@
 module github.com/2ajoyce/dynamic-readme-elements/v0
 
-go 1.25.8
+go 1.25.9
 
 require (
 	github.com/gin-gonic/gin v1.12.0
