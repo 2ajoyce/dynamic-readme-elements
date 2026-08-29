@@ -11,18 +11,132 @@ import (
 )
 
 const calendarChartTemplateStr = `
-	<svg width="370px" height="{{.Height}}px" xmlns="http://www.w3.org/2000/svg" font-family="Arial">
+	<svg width="370px" height="{{.Height}}px" xmlns="http://www.w3.org/2000/svg" font-family="Arial" xmlns:xlink="http://www.w3.org/1999/xlink">
+		<script type="text/ecmascript">
+		<![CDATA[
+		var currentYear = {{.Year}};
+		var currentMonth = {{.Month}};
+		var progressDaysMap = {};
+		{{- range $day := .ProgressDays -}}
+		progressDaysMap[{{$day}}] = true;
+		{{- end }}
+
+		// Calendar layout constants
+		var CELL_SIZE = 40;
+		var CELL_SPACING = 50;
+		var GRID_OFFSET_X = 15;
+		var GRID_OFFSET_Y = 45;
+		var TEXT_OFFSET_X = 20; // Centers text in 40px cell
+		var TEXT_OFFSET_Y = 25; // Centers text in 40px cell
+
+		function getDaysInMonth(year, month) {
+			return new Date(year, month, 0).getDate();
+		}
+
+		function getStartDay(year, month) {
+			return new Date(year, month - 1, 1).getDay();
+		}
+
+		function getMonthName(month) {
+			var months = ["January", "February", "March", "April", "May", "June",
+				"July", "August", "September", "October", "November", "December"];
+			return months[month - 1];
+		}
+
+		function updateCalendar() {
+			var daysInMonth = getDaysInMonth(currentYear, currentMonth);
+			var startDay = getStartDay(currentYear, currentMonth);
+			
+			// Update header
+			var header = document.getElementById("monthHeader");
+			header.textContent = getMonthName(currentMonth) + " " + currentYear;
+			
+			// Clear existing calendar grid
+			var calendarGrid = document.getElementById("calendarGrid");
+			while (calendarGrid.firstChild) {
+				calendarGrid.removeChild(calendarGrid.firstChild);
+			}
+			
+			// Generate new calendar grid
+			for (var i = 1; i <= daysInMonth; i++) {
+				var positionIndex = i + startDay - 1;
+				var x = (positionIndex % 7) * CELL_SPACING + GRID_OFFSET_X;
+				var y = Math.floor(positionIndex / 7) * CELL_SPACING + GRID_OFFSET_Y;
+				var isProgress = progressDaysMap[i] === true;
+				
+				var rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+				rect.setAttribute("x", x);
+				rect.setAttribute("y", y);
+				rect.setAttribute("width", CELL_SIZE);
+				rect.setAttribute("height", CELL_SIZE);
+				rect.setAttribute("fill", isProgress ? "#4c1" : "#f0f0f0");
+				rect.setAttribute("stroke", "#ddd");
+				calendarGrid.appendChild(rect);
+				
+				var text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+				text.setAttribute("x", x + TEXT_OFFSET_X);
+				text.setAttribute("y", y + TEXT_OFFSET_Y);
+				text.setAttribute("font-size", 14);
+				text.setAttribute("text-anchor", "middle");
+				text.setAttribute("fill", isProgress ? "white" : "black");
+				text.textContent = i;
+				calendarGrid.appendChild(text);
+			}
+
+			// Update SVG height if needed
+			var height = 310;
+			if (startDay + daysInMonth > 35) {
+				height = 360;
+			}
+			var svgRoot = document.querySelector('svg');
+			if (svgRoot) {
+				svgRoot.setAttribute("height", height + "px");
+			}
+			document.getElementById("bgRect").setAttribute("height", (height - 10) + "px");
+		}
+
+		function prevMonth() {
+			currentMonth--;
+			if (currentMonth < 1) {
+				currentMonth = 12;
+				currentYear--;
+			}
+			updateCalendar();
+		}
+
+		function nextMonth() {
+			currentMonth++;
+			if (currentMonth > 12) {
+				currentMonth = 1;
+				currentYear++;
+			}
+			updateCalendar();
+		}
+		]]>
+		</script>
+
 		<!-- Background with rounded corners and padding -->
-		<rect x="5" y="5" width="360px" height="{{add .Height -10}}px" fill="white" rx="15" />
+		<rect id="bgRect" x="5" y="5" width="360px" height="{{add .Height -10}}px" fill="white" rx="15" />
 
 		<!-- Header for month and year -->
-		<text x="180" y="35" font-size="20" text-anchor="middle" fill="black">{{.MonthName}} {{.Year}}</text>
+		<text id="monthHeader" x="180" y="35" font-size="20" text-anchor="middle" fill="black">{{.MonthName}} {{.Year}}</text>
+
+		<!-- Navigation Buttons -->
+		<g id="prevButton" onmousedown="prevMonth();" style="cursor:pointer;">
+			<rect x="15" y="15" width="60" height="25" fill="#007bff" rx="5" />
+			<text x="45" y="32" font-size="12" text-anchor="middle" fill="white">← Prev</text>
+		</g>
+		<g id="nextButton" onmousedown="nextMonth();" style="cursor:pointer;">
+			<rect x="295" y="15" width="60" height="25" fill="#007bff" rx="5" />
+			<text x="325" y="32" font-size="12" text-anchor="middle" fill="white">Next →</text>
+		</g>
 
 		{{- $startDay := .StartDay -}}
 		{{- $daysInMonth := .DaysInMonth -}}
 		{{- $progressDays := .ProgressDays -}}
 
 		<!-- Generating the grid -->
+		<g id="calendarGrid">
 		{{- range $i := seq 1 $daysInMonth -}}
 			{{- $positionIndex := add (add $i $startDay) -1 -}}
 			{{- $x := mod $positionIndex 7 -}}
@@ -31,6 +145,7 @@ const calendarChartTemplateStr = `
 			<rect x="{{add (mult $x 50) 15}}" y="{{add (mult $y 50) 45}}" width="40" height="40" fill="{{if $isProgress}}#4c1{{else}}#f0f0f0{{end}}" stroke="#ddd" />
 			<text x="{{add (mult $x 50) 35}}" y="{{add (mult $y 50) 70}}" font-size="14" text-anchor="middle" fill="{{if $isProgress}}white{{else}}black{{end}}">{{$i}}</text>
 		{{- end }}
+		</g>
 	</svg>
 	`
 
