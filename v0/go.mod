@@ -4,7 +4,7 @@ go 1.26.9
 
 require (
 	github.com/gin-gonic/gin v1.12.0
-	golang.org/x/net v0.61.0
+	golang.org/x/net v0.62.0
 )
 
 require (
